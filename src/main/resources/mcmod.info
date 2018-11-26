@@ -1,0 +1,16 @@
+[
+{
+  "modid": "victory_royale",
+  "name": "Victory Royale Mod",
+  "description": "Displays #1 Victory Royale upon game win on Hypixel.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Sk1er"],
+  "credits": "2PI for proving the game end hooks via AutoGG",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,9 @@
+{
+ "victory_royale" : {
+   "category": "player",
+   "subtitle":"victory_royale",
+   "sounds": [
+     "victory_royale:sound"
+   ]
+ }
+}
