@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,25 +18,23 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.opengl.GL11;
 import pw._2pi.autogg.victory_royale.gg.AutoGG;
 
-import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Pattern;
 
 
-@Mod(modid = "victory_royale", version = "1.0", clientSideOnly = true, acceptedMinecraftVersions = "[1.8.9]")
+@Mod(modid = "victory_royale", version = "2.0", clientSideOnly = true, acceptedMinecraftVersions = "[1.8.9]")
 public class VictoryRoyale {
 
     private static VictoryRoyale INSTANCE;
-    int e = 0;
     private Sk1erMod sk1erMod;
-    private boolean show = false;
     private ResourceLocation textureLoc = new ResourceLocation("victory_royale", "victory_royale.png");
     private ResourceLocation soundLoc = new ResourceLocation("victory_royale", "victory_royale");
     private long start = 0;
     private ConcurrentLinkedQueue<WhiteLine> points = new ConcurrentLinkedQueue<>();
-    private IntBuffer pixelBuffer;
-    private int[] pixelValues;
-    private long lastFrameTime = 0;
+    private List<Pattern> patternList = new ArrayList<>();
 
     public static VictoryRoyale getInstance() {
         return INSTANCE;
@@ -46,14 +43,17 @@ public class VictoryRoyale {
     @Mod.EventHandler
     public void init(final FMLPreInitializationEvent event) {
         INSTANCE = this;
-        sk1erMod = new Sk1erMod("victory_royale", "1.0", "Victory Royale");
+        sk1erMod = new Sk1erMod("victory_royale", "2.0", "Victory Royale");
         sk1erMod.checkStatus();
         new AutoGG(event.getSuggestedConfigurationFile());
         MinecraftForge.EVENT_BUS.register(this);
-
-
+        Multithreading.runAsync(() -> {
+            String s = sk1erMod.rawWithAgent("https://sk1er.club/victory_royale.txt");
+            for (String s1 : s.split("\n")) {
+                patternList.add(Pattern.compile(s1));
+            }
+        });
     }
-
 
     @SubscribeEvent
     public void onRender(TickEvent.RenderTickEvent event) {
@@ -168,14 +168,19 @@ public class VictoryRoyale {
         if (Minecraft.getMinecraft().thePlayer == null)
             return;
         EntityPlayerSP thePlayer = Minecraft.getMinecraft().thePlayer;
-        if (thePlayer.isInvisible() || thePlayer.isInvisibleToPlayer(thePlayer)) {
-            return;
-        }
-        for (PotionEffect potionEffect : thePlayer.getActivePotionEffects()) {
-            if (potionEffect.getPotionID()==14) {
-                return;
+        String title = Minecraft.getMinecraft().ingameGUI.field_175201_x;
+        String sub = Minecraft.getMinecraft().ingameGUI.field_175200_y;
+
+        //field_175201_x
+        boolean match = false;
+        for (Pattern pattern : patternList) {
+            if (pattern.matcher(title).find() || pattern.matcher(sub).find()) {
+                match = true;
+                break;
             }
         }
+        if (!match)
+            return;
         thePlayer.playSound(soundLoc.toString(), .5F, 1.0F);
         start = System.currentTimeMillis();
         points.clear();
