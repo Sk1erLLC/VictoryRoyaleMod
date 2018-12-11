@@ -48,45 +48,6 @@ public class Sk1erMod {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    public static Sk1erMod getInstance() {
-        return instance;
-    }
-
-    public boolean isHypixel() {
-        return hypixel;
-    }
-
-    public JsonObject getResponse() {
-        return en;
-    }
-
-    public boolean hasUpdate() {
-        return hasUpdate;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public List<String> getUpdateMessage() {
-        return updateMessage;
-    }
-
-    public String getApIKey() {
-        return apiKey;
-    }
-
-    public void sendMessage(String message) {
-        EntityPlayerSP thePlayer = Minecraft.getMinecraft().thePlayer;
-        if (thePlayer != null) {
-            thePlayer.addChatComponentMessage(new ChatComponentText(prefix + message));
-        }
-    }
-
-    public JsonObject getPlayer(String name) {
-        return new JsonParser().parse(rawWithAgent("http://sk1er.club/data/" + name + "/" + getApIKey())).getAsJsonObject();
-    }
-
     public void checkStatus() {
         Multithreading.schedule(() -> {
             en = new JsonParser().parse(rawWithAgent("http://sk1er.club/genkey?name=" + Minecraft.getMinecraft().getSession().getProfile().getName()
@@ -129,7 +90,7 @@ public class Sk1erMod {
     }
 
     @SubscribeEvent
-    public void onLoin(FMLNetworkEvent.ClientConnectedToServerEvent event) {
+    public void onLogin(FMLNetworkEvent.ClientConnectedToServerEvent event) {
         hypixel = !FMLClientHandler.instance().getClient().isSingleplayer()
                 && (FMLClientHandler.instance().getClient().getCurrentServerData().serverIP.contains("hypixel.net") ||
                 FMLClientHandler.instance().getClient().getCurrentServerData().serverName.equalsIgnoreCase("HYPIXEL"));
@@ -150,7 +111,7 @@ public class Sk1erMod {
     }
 
     @SubscribeEvent
-    public void onPlayerLogOutEvent(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+    public void onLogout(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         hypixel = false;
     }
 
@@ -174,7 +135,47 @@ public class Sk1erMod {
         JsonObject object = new JsonObject();
         object.addProperty("success", false);
         object.addProperty("cause", "Exception");
+        
         return object.toString();
-
+    }    
+   
+    public static Sk1erMod getInstance() {
+        return instance;
     }
+
+    public boolean isHypixel() {
+        return hypixel;
+    }
+
+    public JsonObject getResponse() {
+        return en;
+    }
+
+    public boolean hasUpdate() {
+        return hasUpdate;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public List<String> getUpdateMessage() {
+        return updateMessage;
+    }
+
+    public String getApIKey() {
+        return apiKey;
+    }
+
+    public void sendMessage(String message) {
+        EntityPlayerSP thePlayer = Minecraft.getMinecraft().thePlayer;
+        if (thePlayer != null) {
+            thePlayer.addChatComponentMessage(new ChatComponentText(prefix + message));
+        }
+    }
+
+    public JsonObject getPlayer(String name) {
+        return new JsonParser().parse(rawWithAgent("http://sk1er.club/data/" + name + "/" + getApIKey())).getAsJsonObject();
+    }
+    
 }
