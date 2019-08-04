@@ -120,21 +120,21 @@ public class VictoryRoyale {
                     GlStateManager.disableTexture2D();
                     worldrenderer.begin(GL11.GL_TRIANGLES, DefaultVertexFormats.POSITION);
                     if (side == 1) {
-                        worldrenderer.pos((double) trueX, (double) trueY, 0.0D).endVertex();
+                        worldrenderer.pos(trueX, trueY, 0.0D).endVertex();
                         worldrenderer.pos((double) px + 0, (double) py + point.width, 0.0D).endVertex();
-                        worldrenderer.pos((double) px, (double) py, 0.0D).endVertex();
+                        worldrenderer.pos(px, py, 0.0D).endVertex();
                     } else if (side == 3) {
-                        worldrenderer.pos((double) trueX, (double) trueY, 0.0D).endVertex();
-                        worldrenderer.pos((double) px, (double) py, 0.0D).endVertex();
+                        worldrenderer.pos(trueX, trueY, 0.0D).endVertex();
+                        worldrenderer.pos(px, py, 0.0D).endVertex();
                         worldrenderer.pos((double) px + 0, (double) py + point.width, 0.0D).endVertex();
                     } else if (side == 2) {
-                        worldrenderer.pos((double) trueX, (double) trueY, 0.0D).endVertex();
-                        worldrenderer.pos((double) px, (double) py, 0.0D).endVertex();
-                        worldrenderer.pos((double) px + 10, (double) py, 0.0D).endVertex();
+                        worldrenderer.pos(trueX, trueY, 0.0D).endVertex();
+                        worldrenderer.pos(px, py, 0.0D).endVertex();
+                        worldrenderer.pos((double) px + 10, py, 0.0D).endVertex();
                     } else {
-                        worldrenderer.pos((double) trueX, (double) trueY, 0.0D).endVertex();
-                        worldrenderer.pos((double) px + 10, (double) py, 0.0D).endVertex();
-                        worldrenderer.pos((double) px, (double) py, 0.0D).endVertex();
+                        worldrenderer.pos(trueX, trueY, 0.0D).endVertex();
+                        worldrenderer.pos((double) px + 10, py, 0.0D).endVertex();
+                        worldrenderer.pos(px, py, 0.0D).endVertex();
                     }
 
                     tessellator.draw();
@@ -168,8 +168,8 @@ public class VictoryRoyale {
         if (Minecraft.getMinecraft().thePlayer == null)
             return;
         EntityPlayerSP thePlayer = Minecraft.getMinecraft().thePlayer;
-        String title = Minecraft.getMinecraft().ingameGUI.field_175201_x;
-        String sub = Minecraft.getMinecraft().ingameGUI.field_175200_y;
+        String title = Minecraft.getMinecraft().ingameGUI.displayedTitle;
+        String sub = Minecraft.getMinecraft().ingameGUI.displayedSubTitle;
 
         //field_175201_x
         boolean match = false;
@@ -191,12 +191,12 @@ public class VictoryRoyale {
     }
 
 
-    class WhiteLine {
+    static class WhiteLine {
 
         private double xPercent, yPercent;
         private int width;
 
-        public WhiteLine(double xPercent, double yPercent, int width) {
+        WhiteLine(double xPercent, double yPercent, int width) {
             this.xPercent = xPercent;
             this.yPercent = yPercent;
             this.width = width;

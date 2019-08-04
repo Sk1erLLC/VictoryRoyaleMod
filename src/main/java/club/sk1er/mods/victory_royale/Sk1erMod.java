@@ -35,8 +35,6 @@ public class Sk1erMod {
     private String apiKey;
     private String prefix;
     private JsonObject en;
-    private int count;
-    private int wait;
     private boolean hypixel;
 
     public Sk1erMod(String modid, String version, String name) {
@@ -88,44 +86,44 @@ public class Sk1erMod {
     }
 
     public void checkStatus() {
-        Multithreading.schedule(() -> {
-            en = new JsonParser().parse(rawWithAgent("http://sk1er.club/genkey?name=" + Minecraft.getMinecraft().getSession().getProfile().getName()
-                    + "&uuid=" + Minecraft.getMinecraft().getSession().getPlayerID().replace("-", "")
-                    + "&mcver=" + Minecraft.getMinecraft().getVersion()
-                    + "&modver=" + version
-                    + "&mod=" + modid
-            )).getAsJsonObject();
-            updateMessage.clear();
-            enabled = en.get("enabled").getAsBoolean();
-            hasUpdate = en.get("update").getAsBoolean();
-            apiKey = en.get("key").getAsString();
-            boolean first = en.has("first") && en.get("first").getAsBoolean();
-            if (first) {
-                updateMessage.add(prefix + "----------------------------------");
-                updateMessage.add(prefix + "Message from Sk1er: ");
-                updateMessage.add(prefix + en.get("firstMessage").getAsString());
-                updateMessage.add(" ");
+        if (Minecraft.getMinecraft().gameSettings.snooperEnabled) {
+            Multithreading.schedule(() -> {
+                en = new JsonParser().parse(rawWithAgent("http://sk1er.club/genkey?name=" + Minecraft.getMinecraft().getSession().getProfile().getName()
+                        + "&uuid=" + Minecraft.getMinecraft().getSession().getPlayerID().replace("-", "")
+                        + "&mcver=" + Minecraft.getMinecraft().getVersion()
+                        + "&modver=" + version
+                        + "&mod=" + modid
+                )).getAsJsonObject();
+                updateMessage.clear();
+                enabled = en.get("enabled").getAsBoolean();
+                hasUpdate = en.get("update").getAsBoolean();
+                apiKey = en.get("key").getAsString();
+                boolean first = en.has("first") && en.get("first").getAsBoolean();
+                if (first) {
+                    updateMessage.add(prefix + "----------------------------------");
+                    updateMessage.add(prefix + "Message from Sk1er: ");
+                    updateMessage.add(prefix + en.get("firstMessage").getAsString());
+                    updateMessage.add(" ");
 
-                updateMessage.add(prefix + "----------------------------------");
-                return;
-            }
+                    updateMessage.add(prefix + "----------------------------------");
+                    return;
+                }
 
-            if (hasUpdate) {
-                updateMessage.add(prefix + "----------------------------------");
+                if (hasUpdate) {
+                    updateMessage.add(prefix + "----------------------------------");
 
-                updateMessage.add(" ");
-                updateMessage.add(prefix + "            " + name + " is out of date!");
-                updateMessage.add(prefix + "Update level: " + en.get("level").getAsString());
-                updateMessage.add(prefix + "Update URL: " + en.get("url").getAsString());
-                updateMessage.add(prefix + "Message from Sk1er: ");
-                updateMessage.add(prefix + en.get("message").getAsString());
-                updateMessage.add(" ");
+                    updateMessage.add(" ");
+                    updateMessage.add(prefix + "            " + name + " is out of date!");
+                    updateMessage.add(prefix + "Update level: " + en.get("level").getAsString());
+                    updateMessage.add(prefix + "Update URL: " + en.get("url").getAsString());
+                    updateMessage.add(prefix + "Message from Sk1er: ");
+                    updateMessage.add(prefix + en.get("message").getAsString());
+                    updateMessage.add(" ");
 
-                updateMessage.add(prefix + "----------------------------------");
-            }
-
-
-        }, 0, 5, TimeUnit.MINUTES);
+                    updateMessage.add(prefix + "----------------------------------");
+                }
+            }, 0, 5, TimeUnit.MINUTES);
+        }
     }
 
     @SubscribeEvent
