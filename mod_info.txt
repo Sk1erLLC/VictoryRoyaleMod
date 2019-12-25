@@ -1,0 +1,7 @@
+<br>
+<p>Adds the Fortnite Victory Royale win effect upon winning a game on Hypixel</p>
+<br>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/g4pZTX8ooqI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<br>
+<h2>Download: <a href="https://sk1er.club/victory_royale1.0-1.8.9">https://sk1er.club/victory_royale1.0-1.8.9</a></h2><br>
+<p>View source code: <a href="https://github.com/Sk1er/VictoryRoyaleMod">https://github.com/Sk1er/VictoryRoyaleMod</a></p>
